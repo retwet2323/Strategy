@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Strategy Pattern con Inyección (JS)</title>
+</head>
+<body>
+
+<button id="botonA">Ejecutar Estrategia A</button>
+<button id="botonB">Ejecutar Estrategia B</button>
+<div id="resultado"></div>
+
+<script>
+// Interfaz Estrategia (convención)
+class Estrategia {
+  ejecutar() {
+    throw 'Ejecutar debe implementarse'
+  }
+}
+
+// Estrategia concreta A
+class EstrategiaA extends Estrategia {
+  ejecutar() {
+    return 'Estrategia A ejecutada (inyectada)'
+  }
+}
+
+// Estrategia concreta B
+class EstrategiaB extends Estrategia {
+  ejecutar() {
+    return 'Estrategia B ejecutada (inyectada)'
+  }
+}
+
+// Contexto recibe la estrategia por inyección (constructor)
+class Contexto {
+  constructor(estrategia) {
+    this.estrategia = estrategia
+  }
+  ejecutar() {
+    return this.estrategia.ejecutar()
+  }
+}
+
+document.getElementById('botonA').addEventListener('click', () => {
+  const estrategiaA = new EstrategiaA()
+  const contexto = new Contexto(estrategiaA) // Inyección aquí
+  document.getElementById('resultado').textContent = contexto.ejecutar()
+})
+
+document.getElementById('botonB').addEventListener('click', () => {
+  const estrategiaB = new EstrategiaB()
+  const contexto = new Contexto(estrategiaB) // Inyección aquí
+  document.getElementById('resultado').textContent = contexto.ejecutar()
+})
+</script>
+
+</body>
+</html>

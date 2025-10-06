@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Strategy Pattern sin Inyección (JS)</title>
+</head>
+<body>
+
+<button id="botonA">Ejecutar Estrategia A</button>
+<button id="botonB">Ejecutar Estrategia B</button>
+<div id="resultado"></div>
+
+<script>
+// Estrategias concretas
+class EstrategiaA {
+  ejecutar() {
+    return 'Estrategia A ejecutada (creada internamente)'
+  }
+}
+
+class EstrategiaB {
+  ejecutar() {
+    return 'Estrategia B ejecutada (creada internamente)'
+  }
+}
+
+// Contexto crea y usa internamente las estrategias
+class Contexto {
+  constructor() {
+    this.estrategiaA = new EstrategiaA()
+    this.estrategiaB = new EstrategiaB()
+  }
+
+  usarA() {
+    return this.estrategiaA.ejecutar()
+  }
+
+  usarB() {
+    return this.estrategiaB.ejecutar()
+  }
+}
+
+const contexto = new Contexto()
+
+document.getElementById('botonA').addEventListener('click', () => {
+  document.getElementById('resultado').textContent = contexto.usarA()
+})
+
+document.getElementById('botonB').addEventListener('click', () => {
+  document.getElementById('resultado').textContent = contexto.usarB()
+})
+</script>
+
+</body>
+</html>

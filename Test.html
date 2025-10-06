@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Tests de Strategy: Sin y Con Inyección de Dependencias</title>
+<style>
+  section {
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    padding: 10px;
+  }
+  h2 {
+    margin-top: 0;
+  }
+  pre {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    padding: 8px;
+    overflow-x: auto;
+  }
+</style>
+</head>
+<body>
+
+<section>
+  <h2>Sin Inyección de Dependencias (Sin_inyeccionD.html)</h2>
+  <button id="btnSinA">Ejecutar Estrategia A</button>
+  <button id="btnSinB">Ejecutar Estrategia B</button>
+  <div id="resultadoSin"></div>
+  <h3>Explicación para depurar, casos y errores:</h3>
+  <p><b>Depuración:</b> Colocar breakpoints en los métodos <code>ejecutar()</code> de cada estrategia para comprobar que se llaman.</p>
+  <p><b>Casos esperados:</b> Se debe imprimir mensaje correspondiente a Estrategia A o B según botón pulsado.</p>
+  <p><b>Errores comunes:</b> Modificar código del contexto puede romper el acoplamiento; difícil probar estrategias por separado.</p>
+</section>
+
+<section>
+  <h2>Con Inyección de Dependencias (Con_inyeccionD.html)</h2>
+  <button id="btnConA">Ejecutar Estrategia A</button>
+  <button id="btnConB">Ejecutar Estrategia B</button>
+  <div id="resultadoCon"></div>
+  <h3>Explicación para depurar, casos y errores:</h3>
+  <p><b>Depuración:</b> Colocar breakpoints dentro del constructor del contexto y en <code>ejecutar()</code> de estrategias.</p>
+  <p><b>Casos esperados:</b> El contexto ejecuta la estrategia pasada por inyección correctamente, mostrando el mensaje adecuado.</p>
+  <p><b>Errores comunes:</b> No inyectar la estrategia correcta puede causar resultados inesperados; facilita prueba y extensión.</p>
+</section>
+
+<script>
+// === Sin inyección ===
+class EstrategiaA_Sin {
+  ejecutar() {
+    return 'Estrategia A ejecutada (creada internamente)';
+  }
+}
+
+class EstrategiaB_Sin {
+  ejecutar() {
+    return 'Estrategia B ejecutada (creada internamente)';
+  }
+}
+
+class Contexto_Sin {
+  constructor() {
+    this.estrategiaA = new EstrategiaA_Sin();
+    this.estrategiaB = new EstrategiaB_Sin();
+  }
+
+  usarA() {
+    return this.estrategiaA.ejecutar();
+  }
+
+  usarB() {
+    return this.estrategiaB.ejecutar();
+  }
+}
+
+const contextoSin = new Contexto_Sin();
+
+document.getElementById('btnSinA').addEventListener('click', () => {
+  document.getElementById('resultadoSin').textContent = contextoSin.usarA();
+});
+
+document.getElementById('btnSinB').addEventListener('click', () => {
+  document.getElementById('resultadoSin').textContent = contextoSin.usarB();
+});
+
+// === Con inyección ===
+class EstrategiaA_Con {
+  ejecutar() {
+    return 'Estrategia A ejecutada (inyectada)';
+  }
+}
+
+class EstrategiaB_Con {
+  ejecutar() {
+    return 'Estrategia B ejecutada (inyectada)';
+  }
+}
+
+class Contexto_Con {
+  constructor(estrategia) {
+    this.estrategia = estrategia;
+  }
+
+  ejecutar() {
+    return this.estrategia.ejecutar();
+  }
+}
+
+document.getElementById('btnConA').addEventListener('click', () => {
+  const estrategiaA = new EstrategiaA_Con();
+  const contextoCon = new Contexto_Con(estrategiaA);
+  document.getElementById('resultadoCon').textContent = contextoCon.ejecutar();
+});
+
+document.getElementById('btnConB').addEventListener('click', () => {
+  const estrategiaB = new EstrategiaB_Con();
+  const contextoCon = new Contexto_Con(estrategiaB);
+  document.getElementById('resultadoCon').textContent = contextoCon.ejecutar();
+});
+</script>
+
+</body>
+</html>
