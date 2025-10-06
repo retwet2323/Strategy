@@ -18,6 +18,10 @@
     padding: 8px;
     overflow-x: auto;
   }
+  button {
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
 </style>
 </head>
 <body>
@@ -37,10 +41,11 @@
   <h2>Con Inyección de Dependencias (Con_inyeccionD.html)</h2>
   <button id="btnConA">Ejecutar Estrategia A</button>
   <button id="btnConB">Ejecutar Estrategia B</button>
+  <button id="btnConC">Ejecutar Estrategia C (dinámica)</button>
   <div id="resultadoCon"></div>
   <h3>Explicación para depurar, casos y errores:</h3>
   <p><b>Depuración:</b> Colocar breakpoints dentro del constructor del contexto y en <code>ejecutar()</code> de estrategias.</p>
-  <p><b>Casos esperados:</b> El contexto ejecuta la estrategia pasada por inyección correctamente, mostrando el mensaje adecuado.</p>
+  <p><b>Casos esperados:</b> El contexto ejecuta cualquier estrategia que se inyecte, incluyendo la dinámica Estrategia C.</p>
   <p><b>Errores comunes:</b> No inyectar la estrategia correcta puede causar resultados inesperados; facilita prueba y extensión.</p>
 </section>
 
@@ -96,6 +101,13 @@ class EstrategiaB_Con {
   }
 }
 
+// Nueva estrategia dinámica para demostrar inyección flexible
+class EstrategiaC_Con {
+  ejecutar() {
+    return 'Estrategia C ejecutada (inyectada dinámicamente)';
+  }
+}
+
 class Contexto_Con {
   constructor(estrategia) {
     this.estrategia = estrategia;
@@ -115,6 +127,12 @@ document.getElementById('btnConA').addEventListener('click', () => {
 document.getElementById('btnConB').addEventListener('click', () => {
   const estrategiaB = new EstrategiaB_Con();
   const contextoCon = new Contexto_Con(estrategiaB);
+  document.getElementById('resultadoCon').textContent = contextoCon.ejecutar();
+});
+
+document.getElementById('btnConC').addEventListener('click', () => {
+  const estrategiaC = new EstrategiaC_Con();
+  const contextoCon = new Contexto_Con(estrategiaC);
   document.getElementById('resultadoCon').textContent = contextoCon.ejecutar();
 });
 </script>
